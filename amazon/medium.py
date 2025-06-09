@@ -1,6 +1,6 @@
 import heapq
 import math
-from typing import Counter, List, Optional
+from typing import Counter, List, Optional, cast
 from collections import defaultdict, deque
 
 
@@ -118,4 +118,66 @@ class OrangesRotting:
             t += 1
 
         return t if fresh == 0 else -1
+
+
+class LNode:
+    def __init__(self, key: int = 0, val: int = 0) -> None:
+        self.key = key
+        self.val = val
+        self.left: Optional[LNode] = None
+        self.right: Optional[LNode] = None
+
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.size = 0
+        self.cap = capacity
+        self.map: dict[int, LNode] = {}
+
+        self.left = LNode()
+        self.right = LNode()
+        self.left.right = self.right
+        self.right.left = self.left
+
+    def insert(self, n: LNode):
+        prev = cast(LNode, self.right.left)
+        prev.right = n
+        n.left = prev
+        self.right.left = n
+        n.right = self.right
+        self.map[n.key] = n
+
+    def remove(self, n: LNode):
+        prev = cast(LNode, n.left)
+        next = cast(LNode, n.right)
+        prev.right = next
+        next.left = prev
+        del self.map[n.key]
+
+    def yoink(self, n: LNode):
+        self.remove(n)
+        self.insert(n)
+
+    def get(self, key: int) -> int:
+        if key not in self.map:
+            return -1
+        n = self.map[key]
+        self.yoink(n)
+        return n.val
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.map:
+            n = self.map[key]
+            n.val = value
+            self.yoink(n)
+            return
+
+        if self.size == self.cap:
+            bye = cast(LNode, self.left.right)
+            self.remove(bye)
+        else:
+            self.size += 1
+
+        n = LNode(key, value)
+        self.insert(n)
 
