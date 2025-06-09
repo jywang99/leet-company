@@ -1,7 +1,7 @@
 import heapq
 import math
 from typing import Counter, List, Optional
-from collections import defaultdict
+from collections import defaultdict, deque
 
 
 class Node:
@@ -52,17 +52,70 @@ class ReorganizeString:
         return rs
 
 
-class WordBreak2:
-    def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
-        dp = { len(s): [""] }
+class TreeNode:
+    def __init__(self, x):
+        self.val: int = x
+        self.left: Optional[TreeNode] = None
+        self.right: Optional[TreeNode] = None
 
-        def recurse(i: int, s: str) -> List[str]:
-            if i in dp:
-                return list(map(lambda suf: s + " " + suf, dp[i]))
 
-            rs = []
-            for word in wordDict:
-                if s[i].startswith(word):
-                    rs.append(recurse(i + len(word), s + " " + word))
-            dp[i] = rs
+class BinaryTreeDistK:
+    def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
+        adj: dict[TreeNode, list[TreeNode]] = defaultdict(list)
+        q: deque[TreeNode] = deque([root])
+        while q:
+            for _ in range(len(q)):
+                n = q.popleft()
+                if n.left:
+                    adj[n].append(n.left)
+                    adj[n.left].append(n)
+                    q.append(n.left)
+                if n.right:
+                    adj[n].append(n.right)
+                    adj[n.right].append(n)
+                    q.append(n.right)
+
+        visit = set()
+        q.append(target)
+        while q and k > 0:
+            for _ in range(len(q)):
+                n = q.popleft()
+                visit.add(n)
+                for nei in adj[n]:
+                    if nei in visit:
+                        continue
+                    q.append(nei)
+            k -= 1
+
+        return [ n.val for n in q ]
+
+
+class OrangesRotting:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        dirs = ((-1, 0), (1, 0), (0, -1), (0, 1))
+        rows, cols = len(grid), len(grid[0])
+
+        q = deque()
+        fresh = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    fresh += 1
+                if grid[r][c] == 2:
+                    q.append((r, c))
+
+        t = 0
+        while q and fresh > 0:
+            for _ in range(len(q)):
+                r, c = q.popleft()
+                for dr, dc in dirs:
+                    nr, nc = r+dr, c+dc
+                    if nr < 0 or nr >= rows or nc < 0 or nc >= cols or grid[nr][nc] != 1:
+                        continue
+                    fresh -= 1
+                    grid[nr][nc] = 2
+                    q.append((nr, nc))
+            t += 1
+
+        return t if fresh == 0 else -1
 
