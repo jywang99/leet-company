@@ -181,3 +181,33 @@ class LRUCache:
         n = LNode(key, value)
         self.insert(n)
 
+
+class TriangularSum:
+    def triangularSum(self, nums: List[int]) -> int:
+        while len(nums) > 1:
+            nxt = []
+            for i in range(0, len(nums)-1):
+                nxt.append((nums[i] + nums[i+1]) % 10)
+            nums = nxt
+        return nums[0]
+
+
+class NumberOfWaysBuildings:
+    def numberOfWays(self, s: str) -> int:
+        t0 = s.count('0')
+        t1 = len(s) - t0
+
+        c0 = 0
+        c1 = 0
+        rs = 0
+
+        for c in s:
+            if c == "0":
+                rs += c1 * (t1 - c1)
+                c0 += 1
+            if c == "1":
+                rs += c0 * (t0 - c0)
+                c1 += 1
+
+        return rs
+

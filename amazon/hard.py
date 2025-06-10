@@ -1,4 +1,5 @@
 from typing import List
+from collections import deque
 
 
 class WordBreak2:
@@ -62,4 +63,24 @@ class NumberToWords:
             si += 1
 
         return rs.strip()
+
+
+class MaximumRobots:
+    def maximumRobots(self, chargeTimes: List[int], runningCosts: List[int], budget: int) -> int:
+        n = len(chargeTimes)
+        cost = l = 0
+        ml = 0
+        q = deque()
+        for r in range(n):
+            cost += runningCosts[r]
+            while q and chargeTimes[q[-1]] <= chargeTimes[r]:
+                q.pop()
+            q.append(r)
+            if chargeTimes[q[0]] + (r - l + 1) * cost > budget:
+                if q[0] == l:
+                    q.popleft()
+                cost -= runningCosts[l]
+                l += 1
+            ml = max(ml, r - l + 1)
+        return ml
 
