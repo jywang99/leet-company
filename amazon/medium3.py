@@ -9,7 +9,7 @@ class TreeNode:
         self.right = None
 
 
-class BTreeDistanceK:
+class DistanceK:
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
         adj = defaultdict(list)
         q = deque([root])
@@ -24,7 +24,7 @@ class BTreeDistanceK:
                 adj[n.right].append(n)
                 q.append(n.right)
 
-        q = deque([target])
+        q.append(target)
         visit = set()
         while q and k > 0:
             for _ in range(len(q)):
@@ -37,19 +37,4 @@ class BTreeDistanceK:
             k -= 1
 
         return [ n.val for n in q ]
-
-
-class NumberOfWays:
-    def numberOfWays(self, s: str) -> int:
-        rs = 0
-        t0, t1 = s.count("0"), s.count("1")
-        c0, c1 = 0, 0
-        for c in s:
-            if c == "0":
-                c0 += 1
-                rs += c1 * (t1 - c1)
-            else:
-                c1 += 1
-                rs += c0 * (t0 - c0)
-        return rs
 
