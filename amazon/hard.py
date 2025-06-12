@@ -1,3 +1,4 @@
+import heapq
 from typing import List
 from collections import deque
 
@@ -83,4 +84,27 @@ class MaximumRobots:
                 l += 1
             ml = max(ml, r - l + 1)
         return ml
+
+
+class KSum:
+    def kSum(self, nums: List[int], k: int) -> int:
+        mx = 0
+        for i, n in enumerate(nums):
+            if n > 0:
+                mx += n
+            else:
+                nums[i] = -n
+        nums.sort()
+
+        hp = [(0, 0)]
+        for _ in range(k - 1):
+            s, idx = heapq.heappop(hp)
+            if idx >= len(nums):
+                continue
+
+            heapq.heappush(hp, (s + nums[idx], idx + 1))
+            if idx:
+                heapq.heappush(hp, (s + nums[idx] - nums[idx - 1], idx + 1))
+
+        return mx - hp[0][0]
 

@@ -53,3 +53,41 @@ class NumberOfWays:
                 rs += c0 * (t0 - c0)
         return rs
 
+
+class GoodDaysToRobBank:
+    def goodDaysToRobBank(self, security: List[int], time: int) -> List[int]:
+        n = len(security)
+
+        left, right = [0] * n, [0] * n
+        for i in range(1, n):
+            if security[i] <= security[i-1]:
+                left[i] = left[i-1] + 1
+        for i in range(n-2, -1, -1):
+            if security[i] <= security[i+1]:
+                right[i] = right[i+1] + 1
+
+        rs = []
+        for i in range(n):
+            if min(left[i], right[i]) >= time:
+                rs.append(i)
+        return rs
+
+
+class getMaxLen:
+    def getMaxLen(self, nums: List[int]) -> int:
+        nlen, plen = 0, 0
+        rs = 0
+
+        for n in nums:
+            if n > 0:
+                plen += 1
+                nlen = nlen + 1 if nlen else 0
+            elif n < 0:
+                plen, nlen = nlen + 1 if nlen else 0, plen + 1
+            else:
+                nlen = plen = 0
+
+            rs = max(rs, plen)
+
+        return rs
+
