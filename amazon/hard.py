@@ -108,3 +108,32 @@ class KSum:
 
         return mx - hp[0][0]
 
+
+class SORTracker:
+    def __init__(self):
+        self.data = []
+        self.cnt = 0
+
+    def add(self, name: str, score: int) -> None:
+        if not self.data:
+            self.data.append((score, name))
+            return
+
+        l, r = 0, len(self.data)-1
+        while l < r:
+            m = (l + r) // 2
+            md = self.data[m]
+            mscore, mname = md
+
+            if mscore > score or mscore == score and mname > name:
+                r = m
+            else:
+                l = m + 1
+
+        self.data.insert(l, (score, name))
+
+    def get(self) -> str:
+        rs = self.data[self.cnt][1]
+        self.cnt += 1
+        return rs
+

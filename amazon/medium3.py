@@ -38,3 +38,25 @@ class DistanceK:
 
         return [ n.val for n in q ]
 
+
+class NumberOfWays:
+    def numberOfWays(self, s: str) -> int:
+        c0 = c1 = 0
+        t0 = t1 = 0
+        for c in s:
+            if c == "0":
+                t0 += 1
+            else:
+                t1 += 1
+
+        rs = 0
+        for c in s:
+            if c == "0":
+                c0 += 1
+                rs += c1 * (t1 - c1)
+            else:
+                c1 += 1
+                rs += c0 * (t0 - c0)
+
+        return rs
+
