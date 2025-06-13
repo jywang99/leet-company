@@ -115,25 +115,18 @@ class SORTracker:
         self.cnt = 0
 
     def add(self, name: str, score: int) -> None:
-        if not self.data:
-            self.data.append((score, name))
-            return
-
-        l, r = 0, len(self.data)-1
+        l, r = 0, len(self.data)
         while l < r:
             m = (l + r) // 2
-            md = self.data[m]
-            mscore, mname = md
-
-            if mscore > score or mscore == score and mname > name:
+            mscore, mname = self.data[m]
+            if score > mscore or (score == mscore and name < mname):
                 r = m
             else:
                 l = m + 1
-
         self.data.insert(l, (score, name))
 
     def get(self) -> str:
-        rs = self.data[self.cnt][1]
+        res = self.data[self.cnt][1]
         self.cnt += 1
-        return rs
+        return res
 
