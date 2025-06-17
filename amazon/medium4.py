@@ -24,12 +24,13 @@ class DistanceK:
                 adj[n.right].append(n)
                 q.append(n.right)
 
-        q.append(target)
+        q = deque([target])
         visit = set()
         while q and k > 0:
             for _ in range(len(q)):
                 n = q.popleft()
                 visit.add(n)
+
                 for nei in adj[n]:
                     if nei in visit:
                         continue
@@ -41,59 +42,17 @@ class DistanceK:
 
 class NumberOfWays:
     def numberOfWays(self, s: str) -> int:
-        c0 = c1 = 0
-        t0 = t1 = 0
-        for c in s:
-            if c == "0":
-                t0 += 1
-            else:
-                t1 += 1
+        c0, c1 = 0, 0
+        t0, t1 = s.count("0"), s.count("1")
 
         rs = 0
         for c in s:
             if c == "0":
                 c0 += 1
                 rs += c1 * (t1 - c1)
-            else:
+            if c == "1":
                 c1 += 1
                 rs += c0 * (t0 - c0)
-
-        return rs
-
-
-class GoodDaysToRobBank:
-    def goodDaysToRobBank(self, security: List[int], time: int) -> List[int]:
-        n = len(security)
-        left, right = [0] * n, [0] * n
-
-        for i in range(1, n):
-            if security[i] <= security[i-1]:
-                left[i] = left[i-1] + 1
-        for i in range(n-2, -1, -1):
-            if security[i] <= security[i+1]:
-                right[i] = right[i+1] + 1
-
-        rs = []
-        for i in range(n):
-            if min(left[i], right[i]) >= time:
-                rs.append(i)
-        return rs
-
-
-class GetMaxLen:
-    def getMaxLen(self, nums: List[int]) -> int:
-        plen, nlen = 0, 0
-        rs = 0
-
-        for n in nums:
-            if n > 0:
-                plen, nlen = plen + 1, nlen + 1 if nlen else 0
-            elif n < 0:
-                plen, nlen = nlen + 1 if nlen else 0, plen + 1
-            else:
-                plen, nlen = 0, 0
-
-            rs = max(rs, plen)
-
+        
         return rs
 

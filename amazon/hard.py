@@ -118,15 +118,14 @@ class SORTracker:
         l, r = 0, len(self.data)
         while l < r:
             m = (l + r) // 2
-            mscore, mname = self.data[m]
-            if score > mscore or (score == mscore and name < mname):
+            ms, mn = self.data[m]
+            if ms < score or ms == score and mn > name:
                 r = m
             else:
                 l = m + 1
         self.data.insert(l, (score, name))
 
     def get(self) -> str:
-        res = self.data[self.cnt][1]
         self.cnt += 1
-        return res
-
+        return self.data[self.cnt - 1][1]
+        
