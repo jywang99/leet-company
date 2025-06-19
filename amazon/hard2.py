@@ -50,3 +50,39 @@ class KSum:
 
         return mx - hp[0][0]
 
+
+class MinHeapItem:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+    def __lt__(self, other):
+        return self.score < other.score or \
+               (self.score == other.score and self.name > other.name)
+
+
+class MaxHeapItem:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+    def __lt__(self, other):
+        return self.score > other.score or \
+               (self.score == other.score and self.name < other.name)
+
+
+class SORTracker:
+    def __init__(self):
+        self.less = []
+        self.more = []
+
+    def add(self, name: str, score: int) -> None:
+        heapq.heappush(self.more, MinHeapItem(name, score))
+        mh = heapq.heappop(self.more)
+        heapq.heappush(self.less, MaxHeapItem(mh.name, mh.score))
+
+    def get(self) -> str:
+        mh = heapq.heappop(self.less)
+        heapq.heappush(self.more, MinHeapItem(mh.name, mh.score))
+        return mh.name
+
